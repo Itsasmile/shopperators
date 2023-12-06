@@ -10,6 +10,26 @@ export default function Products(): ReactNode {
     remult.repo(Product).find().then(setFeaturedProducts);
   }, []);
 
+  const addToCart = (product: Product) => {
+    const sessionCart = sessionStorage.getItem("cart");
+
+    if (sessionCart) {
+      const cart = JSON.parse(sessionCart) as Product[];
+
+      cart.push(product);
+
+      sessionStorage.setItem("cart", JSON.stringify(cart));
+
+      alert("Item added to cart");
+
+      return;
+    }
+
+    sessionStorage.setItem("cart", JSON.stringify([product]));
+
+    alert("Item added to cart");
+  };
+
   return (
     <>
       <h2>Featured Products</h2>
@@ -22,7 +42,7 @@ export default function Products(): ReactNode {
             <span>
               ${product.price} / lb <br></br>
             </span>
-            <Button text="Add to cart" />
+            <Button text="Add to cart" onClick={() => addToCart(product)} />
           </article>
         ))}
       </div>
