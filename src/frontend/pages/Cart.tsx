@@ -1,12 +1,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Product } from "../../shared/Product";
 
-type Group = {
-  [key: number]: Product[];
-};
-
 export default function Cart(): ReactNode {
-  const [products, setProducts] = useState<Group | null>(null);
+  const [products, setProducts] = useState<Map<number, Product[]> | null>(null);
 
   useEffect(() => {
     const jsonProducts = sessionStorage.getItem("cart");
@@ -15,15 +11,34 @@ export default function Cart(): ReactNode {
 
     const cart = JSON.parse(jsonProducts) as Product[];
 
-    const group = cart?.reduce((group: { [key: number]: Product[] }, item) => {
-      if (!group[item.id]) group[item.id] = [];
+    const group = new Map<number, Product[]>();
+    for (const item of cart) {
+      if (!group.has(item.id)) group.set(item.id, []);
 
-      group[item.id].push(item);
-      return group;
-    }, {});
+      group.get(item.id)!.push(item);
+    }
 
     setProducts(group);
+
+    console.log(group);
   }, []);
+
+  const removeItem = (product: Product) => {
+    if (!products) return;
+
+    const newMap = products;
+
+    newMap.delete(product.id);
+
+    if (Array.from(newMap.keys()).length === 0) {
+      setProducts(null);
+      sessionStorage.removeItem("cart");
+      return;
+    }
+
+    sessionStorage.setItem("cart", JSON.stringify(Array.from(newMap.values())));
+    setProducts(newMap);
+  };
 
   return !products ? (
     <p>Cart is empty</p>
@@ -47,10 +62,13 @@ export default function Cart(): ReactNode {
                 <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
                   Total
                 </th>
+                <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="[&amp;_tr:last-child]:border-0">
-              {Object.values(products).map((group) => {
+              {Array.from(products.values()).map((group) => {
                 const product = group[0];
                 return (
                   <tr
@@ -80,6 +98,12 @@ export default function Cart(): ReactNode {
                     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right text-gray-300">
                       ${product.price * group.length}
                     </td>
+                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right text-gray-300">
+                      <i
+                        className="bi bi-trash-fill text-red-600 hover:cursor-pointer"
+                        onClick={() => removeItem(product)}
+                      ></i>
+                    </td>
                   </tr>
                 );
               })}
@@ -102,7 +126,7 @@ export default function Cart(): ReactNode {
               <span>Subtotal</span>
               <span className="font-semibold">
                 $
-                {Object.values(products)
+                {Array.from(products.values())
                   .map((group) => group[0].price)
                   .reduce((sum, current) => sum + current)}
               </span>
@@ -111,7 +135,7 @@ export default function Cart(): ReactNode {
               <span className="font-bold">Total</span>
               <span className="font-bold">
                 $
-                {Object.values(products)
+                {Array.from(products.values())
                   .map((group) => group[0].price)
                   .reduce((sum, current) => sum + current)}
               </span>
