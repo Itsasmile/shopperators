@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Item from "./Item";
+import "./ShoppingList.css";
 
 interface ShoppingItem {
   id: number;
