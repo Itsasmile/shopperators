@@ -8,6 +8,7 @@ import Product from "./pages/Product";
 import Layout from "./Layout";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import ShoppingList from "./pages/ShoppingList";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,11 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
+
+  {
+    path: "/shoppinglist",
+    element: <ShoppingList />,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

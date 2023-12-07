@@ -54,7 +54,7 @@ export default function Navbar({ items }: Readonly<Props>): ReactNode {
                   className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                   aria-current="page"
                 >
-                  Shop
+                  Home
                 </a>
 
                 {items.map((location) => (
@@ -67,6 +67,19 @@ export default function Navbar({ items }: Readonly<Props>): ReactNode {
                     {location.name}
                   </a>
                 ))}
+                <a
+                  href="/shoppinglist"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >
+                  Shopping List
+                </a>
+
+                <a
+                  href="/cart"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >
+                  Shopping Cart
+                </a>
               </div>
             </section>
           </article>
