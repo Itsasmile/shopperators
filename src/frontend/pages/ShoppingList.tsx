@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Item from "./Item";
-import "./ShoppingList.css";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 interface ShoppingItem {
   id: number;
@@ -83,42 +84,47 @@ const ShoppingList: React.FC = () => {
   );
 
   return (
-    <div className="shopping-list">
-      <header>
-        <input
+    <section className="flex flex-col justify-between bg-gray-800 rounded-lg w-11/12 max-w-xs mt-5 mb-5 m-auto">
+      <header className="p-5">
+        <Input
+          label="Product"
           type="text"
           value={listName}
           onChange={handleListNameChange}
-          className="list-name-input"
         />
       </header>
 
-      <div className="add-item-form">
-        <input
+      <article className="border border-solid border-[#E0E0E0] p-5 rounded mx-5">
+        <Input
+          label="Item Name"
           type="text"
           name="name"
-          placeholder="Item name"
+          placeholder="Item Name"
           value={newItem.name}
           onChange={handleInputChange}
         />
-        <input
+
+        <Input
+          label="Price"
           type="number"
-          name="price"
           placeholder="Price"
+          name="price"
           value={newItem.price}
           onChange={handleInputChange}
         />
-        <input
+
+        <Input
+          label="Quantity"
           type="number"
+          placeholder="Quantity"
           name="quantity"
-          placeholder="Quantity (kg)"
           value={newItem.quantity}
           onChange={handleInputChange}
         />
-        <button onClick={addItem}>Add Item</button>
-      </div>
+        <Button onClick={addItem} text="Add Item" />
+      </article>
 
-      <div className="items">
+      <article className="flex flex-col p-5 gap-5">
         {items.map((item) => (
           <Item
             key={item.id}
@@ -130,14 +136,14 @@ const ShoppingList: React.FC = () => {
             onRemove={() => removeItem(item.id)}
           />
         ))}
-      </div>
-      <footer>
+      </article>
+      <footer className="flex flex-col w-full items-center p-5">
         <div className="total">Total: ${total.toFixed(2)}</div>
         <a href="/cart" className="checkout-link">
-          <button className="checkout">Checkout</button>
+          <Button text="checkout" className="bg-green-500" />
         </a>
       </footer>
-    </div>
+    </section>
   );
 };
 
